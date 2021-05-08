@@ -6,7 +6,7 @@ const deps = require('./package.json').dependencies;
 module.exports = (_, argv) => ({
   entry: './src/index',
   output: {
-    publicPath: argv.mode === 'development' ? 'http://localhost:3000/' : 'start-wars-universe.vercel.app',
+    publicPath: argv.mode === 'development' ? 'http://localhost:3000/' : 'https://start-wars-universe.vercel.app',
     path: path.resolve(__dirname, './build'),
   },
   resolve: {
