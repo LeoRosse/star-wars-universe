@@ -96,7 +96,7 @@ const common = (pathDomain) => {
 };
 
 const developmentConfig = (mode) => {
-  const pathDomain = mode === 'development' ? 'http://localhost:3000/' : 'https://start-wars-universe.vercel.app';
+  const pathDomain = mode === 'development' ? 'http://localhost:3000/' : 'https://star-wars-universe.vercel.app';
   return {
     ...common(pathDomain),
     target: 'node',
