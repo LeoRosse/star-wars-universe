@@ -3,8 +3,24 @@ const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPl
 const path = require('path');
 
 const deps = require('./package.json').dependencies;
-module.exports = (_, argv) => {
-  const pathDomain = argv.mode === 'development' ? 'http://localhost:3000/' : 'https://start-wars-universe.vercel.app';
+
+const libraryName = 'star-wars-universe';
+
+const reactDOMExternal = {
+  root: 'ReactDOM',
+  commonjs2: 'react-dom',
+  commonjs: 'react-dom',
+  amd: 'react-dom',
+};
+
+const reactExternal = {
+  root: 'React',
+  commonjs2: 'react',
+  commonjs: 'react',
+  amd: 'react',
+};
+
+const common = (pathDomain) => {
   return {
     entry: './src/index',
     output: {
@@ -45,7 +61,10 @@ module.exports = (_, argv) => {
         },
       ],
     },
-
+    externals: {
+      react: reactExternal,
+      'react-dom': reactDOMExternal,
+    },
     plugins: [
       new ModuleFederationPlugin({
         name: 'universe',
@@ -74,4 +93,27 @@ module.exports = (_, argv) => {
       }),
     ],
   };
+};
+
+const developmentConfig = (mode) => {
+  const pathDomain = mode === 'development' ? 'http://localhost:3000/' : 'https://start-wars-universe.vercel.app';
+  return {
+    ...common(pathDomain),
+    target: 'node',
+    output: {
+      path: path.resolve(__dirname, './build'),
+      publicPath: pathDomain,
+      filename: 'main.js',
+      library: libraryName,
+      libraryTarget: 'commonjs2',
+    },
+  };
+};
+
+module.exports = (_, argv) => {
+  if (argv.mode === 'production')
+    return {
+      ...developmentConfig(argv.mode),
+    };
+  return { ...developmentConfig(argv.mode) };
 };
